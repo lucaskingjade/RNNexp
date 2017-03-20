@@ -1,8 +1,8 @@
 import sys
 try:
-	sys.path.remove('/usr/local/lib/python2.7/dist-packages/Theano-0.6.0-py2.7.egg')
+    sys.path.remove('/usr/local/lib/python2.7/dist-packages/Theano-0.6.0-py2.7.egg')
 except:
-	print 'Theano 0.6.0 version not found'
+    print 'Theano 0.6.0 version not found'
 
 import numpy as np
 import argparse
@@ -84,39 +84,39 @@ base_dir = poseDataset.base_dir
 path = '{0}/{1}/'.format(base_dir,args.checkpoint)
 path2 = '{0}/{1}/'.format(base_dir,args.checkpoint2)
 if not os.path.exists(path):
-	print 'Checkpoint path does not exist. Exiting!!'
-	sys.exit()
-	
+    print 'Checkpoint path does not exist. Exiting!!'
+    sys.exit()
+
 crf_file = './CRFProblems/H3.6m/crf'
 
 if args.forecast == 'dra':
-	path_to_checkpoint = '{0}checkpoint.{1}'.format(path,iteration)
-	path_to_checkpoint2 = '{0}checkpoint.{1}'.format(path2,iteration2)
-	if os.path.exists(path_to_checkpoint) and os.path.exists(path_to_checkpoint2) :
-		[nodeNames,nodeList,nodeFeatureLength,nodeConnections,edgeList,edgeListComplete,edgeFeatures,nodeToEdgeConnections,trX,trY,trX_validation,trY_validation,trX_forecasting,trY_forecasting,trX_forecast_nodeFeatures] = graph.readCRFgraph(poseDataset,noise=0.7,forecast_on_noisy_features=True)
-		print trX_forecast_nodeFeatures.keys()
-		print 'Loading the model'
-		model = loadmultipleDRA(path_to_checkpoint,path_to_checkpoint2,swap_edgernn,swap_edgernn2,swap_nodernn,swap_nodernn2)
-		print 'Loaded DRA: ',path_to_checkpoint
-		t0 = time.time()
+    path_to_checkpoint = '{0}checkpoint.{1}'.format(path,iteration)
+    path_to_checkpoint2 = '{0}checkpoint.{1}'.format(path2,iteration2)
+    if os.path.exists(path_to_checkpoint) and os.path.exists(path_to_checkpoint2) :
+        [nodeNames,nodeList,nodeFeatureLength,nodeConnections,edgeList,edgeListComplete,edgeFeatures,nodeToEdgeConnections,trX,trY,trX_validation,trY_validation,trX_forecasting,trY_forecasting,trX_forecast_nodeFeatures] = graph.readCRFgraph(poseDataset,noise=0.7,forecast_on_noisy_features=True)
+        print trX_forecast_nodeFeatures.keys()
+        print 'Loading the model'
+        model = loadmultipleDRA(path_to_checkpoint,path_to_checkpoint2,swap_edgernn,swap_edgernn2,swap_nodernn,swap_nodernn2)
+        print 'Loaded DRA: ',path_to_checkpoint
+        t0 = time.time()
 
-		trY_forecasting = model.convertToSingleVec(trY_forecasting,new_idx,featureRange)
-		fname = 'ground_truth_mixforecast'
-		model.saveForecastedMotion(trY_forecasting,path,fname)
+        trY_forecasting = model.convertToSingleVec(trY_forecasting,new_idx,featureRange)
+        fname = 'ground_truth_mixforecast'
+        model.saveForecastedMotion(trY_forecasting,path,fname)
 
-		trX_forecast_nodeFeatures_ = model.convertToSingleVec(trX_forecast_nodeFeatures,new_idx,featureRange)
-		fname = 'motionprefixmix'
-		model.saveForecastedMotion(trX_forecast_nodeFeatures_,path,fname)
+        trX_forecast_nodeFeatures_ = model.convertToSingleVec(trX_forecast_nodeFeatures,new_idx,featureRange)
+        fname = 'motionprefixmix'
+        model.saveForecastedMotion(trX_forecast_nodeFeatures_,path,fname)
 
-		forecasted_motion = model.predict_sequence(trX_forecasting,trX_forecast_nodeFeatures,sequence_length=trY_forecasting.shape[0],poseDataset=poseDataset,graph=graph)
-		forecasted_motion = model.convertToSingleVec(forecasted_motion,new_idx,featureRange)
-		fname = 'forecast_iterationmix_{0}'.format(iteration)
-		model.saveForecastedMotion(forecasted_motion,path,fname)
+        forecasted_motion = model.predict_sequence(trX_forecasting,trX_forecast_nodeFeatures,sequence_length=trY_forecasting.shape[0],poseDataset=poseDataset,graph=graph)
+        forecasted_motion = model.convertToSingleVec(forecasted_motion,new_idx,featureRange)
+        fname = 'forecast_iterationmix_{0}'.format(iteration)
+        model.saveForecastedMotion(forecasted_motion,path,fname)
 
-		skel_err = np.mean(np.sqrt(np.sum(np.square((forecasted_motion - trY_forecasting)),axis=2)),axis=1)
-		err_per_dof = skel_err / trY_forecasting.shape[2]
-		fname = 'forecast_error_iterationmix_{0}'.format(iteration)
-		model.saveForecastError(skel_err,err_per_dof,path,fname)
-		t1 = time.time()
-		del model
+        skel_err = np.mean(np.sqrt(np.sum(np.square((forecasted_motion - trY_forecasting)),axis=2)),axis=1)
+        err_per_dof = skel_err / trY_forecasting.shape[2]
+        fname = 'forecast_error_iterationmix_{0}'.format(iteration)
+        model.saveForecastError(skel_err,err_per_dof,path,fname)
+        t1 = time.time()
+        del model
 

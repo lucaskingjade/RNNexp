@@ -1,8 +1,8 @@
 import sys
 try:
-	sys.path.remove('/usr/local/lib/python2.7/dist-packages/Theano-0.6.0-py2.7.egg')
+    sys.path.remove('/usr/local/lib/python2.7/dist-packages/Theano-0.6.0-py2.7.egg')
 except:
-	print 'Theano 0.6.0 version not found'
+    print 'Theano 0.6.0 version not found'
 
 import numpy as np
 import argparse
@@ -64,8 +64,8 @@ new_idx = poseDataset.new_idx
 featureRange = poseDataset.nodeFeaturesRanges
 path = args.checkpoint
 if not os.path.exists(path):
-	print 'Checkpoint path does not exist. Exiting!!'
-	sys.exit()
+    print 'Checkpoint path does not exist. Exiting!!'
+    sys.exit()
 
 crf_file = './CRFProblems/H3.6m/crf'
 
@@ -74,7 +74,7 @@ if args.forecast == 'srnn':
     print "Using checkpoint at: ",path_to_checkpoint
     if os.path.exists(path_to_checkpoint):
 
-	    [nodeNames,nodeList,nodeFeatureLength,nodeConnections,edgeList,edgeListComplete,edgeFeatures,nodeToEdgeConnections,trX,trY,trX_validation,trY_validation,trX_forecasting,trY_forecasting,trX_forecast_nodeFeatures] = graph.readCRFgraph(poseDataset)
+        [nodeNames,nodeList,nodeFeatureLength,nodeConnections,edgeList,edgeListComplete,edgeFeatures,nodeToEdgeConnections,trX,trY,trX_validation,trY_validation,trX_forecasting,trY_forecasting,trX_forecast_nodeFeatures] = graph.readCRFgraph(poseDataset)
 
         print trX_forecast_nodeFeatures.keys()
         print 'Loading the model (this takes long, can take upto 25 minutes)'

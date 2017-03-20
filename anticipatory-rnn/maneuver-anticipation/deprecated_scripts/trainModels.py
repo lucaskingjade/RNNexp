@@ -15,4 +15,4 @@ index = ['960453', '298544', '558591', '463107', '362130']
 # exp(-t*t) th=0.68, 
 
 for i,f in zip(index,folds):
-	os.system('THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python maneuver-rnn.py {0} {1}'.format(i,f))
+    os.system('THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python maneuver-rnn.py {0} {1}'.format(i,f))

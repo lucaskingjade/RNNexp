@@ -26,11 +26,11 @@ params['subsample_data'] = 1
 params['crf'] = '_dl'
 args = ['python','mixskeleton.py']
 for k in params.keys():
-	args.append('--{0}'.format(k))
-	if not isinstance(params[k],list):
-		args.append(str(params[k]))
-	else:
-		for x in params[k]:
-			args.append(str(x))
+    args.append('--{0}'.format(k))
+    if not isinstance(params[k],list):
+        args.append(str(params[k]))
+    else:
+        for x in params[k]:
+            args.append(str(x))
 p=sbp.Popen(args,env=my_env)#,shell=False,stderr=sbp.STDOUT)
 p.wait()

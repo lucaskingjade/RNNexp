@@ -23,16 +23,16 @@ model_type = 2
 index = '0'
 
 if maneuver_type == 'all':
-	index = '356988'
+    index = '356988'
 elif maneuver_type == 'lane':
-	index = '723759'
+    index = '723759'
 elif maneuver_type == 'turns':
-	index = '209221'
+    index = '209221'
 elif maneuver_type == 'all_new_features':
 # New features obtained from Avi. AAM features and driver head pose features
-	index = '846483'
+    index = '846483'
 else:
-	print 'Maneuver mis-match'
+    print 'Maneuver mis-match'
 
 folds = ['fold_1', 'fold_2', 'fold_3', 'fold_4', 'fold_5']
 
@@ -50,25 +50,25 @@ results_mat_time = np.zeros((thresh_params.shape[0],checkpoints_params.shape[0],
 count_th = 0
 count_fold = 0
 for fold in folds:
-	count_checkpoint = 0
-	threads=[]
-	for checkpoint in checkpoints_params:
-		path_to_dataset = 'checkpoints/{0}/{1}/test_data_{2}.pik'.format(maneuver_type,fold,index)
-		path_to_checkpoint = '{0}/{1}/{2}/checkpoint.{3}'.format(checkpoint_dir,fold,index,checkpoint)
-		
-		precision,recall,anticipation_time = evaluateForAllThresholds(path_to_dataset,path_to_checkpoint,thresh_params,architectures[model_type])
-		results_mat_precision[:,count_checkpoint,count_fold] = precision
-		results_mat_recall[:,count_checkpoint,count_fold] = recall
-		results_mat_time[:,count_checkpoint,count_fold] = anticipation_time
-		count_checkpoint += 1
-	
-	count_fold += 1
+    count_checkpoint = 0
+    threads=[]
+    for checkpoint in checkpoints_params:
+        path_to_dataset = 'checkpoints/{0}/{1}/test_data_{2}.pik'.format(maneuver_type,fold,index)
+        path_to_checkpoint = '{0}/{1}/{2}/checkpoint.{3}'.format(checkpoint_dir,fold,index,checkpoint)
+
+        precision,recall,anticipation_time = evaluateForAllThresholds(path_to_dataset,path_to_checkpoint,thresh_params,architectures[model_type])
+        results_mat_precision[:,count_checkpoint,count_fold] = precision
+        results_mat_recall[:,count_checkpoint,count_fold] = recall
+        results_mat_time[:,count_checkpoint,count_fold] = anticipation_time
+        count_checkpoint += 1
+
+    count_fold += 1
 
 for count_th in range(len(thresh_params)):
-	results_mat_recall[count_th,:,-1] = np.mean(results_mat_recall[count_th,:,:-1],axis=1)
-	results_mat_precision[count_th,:,-1] = np.mean(results_mat_precision[count_th,:,:-1],axis=1)
-	results_mat_time[count_th,:,-1] = np.mean(results_mat_time[count_th,:,:-1],axis=1)
-	
+    results_mat_recall[count_th,:,-1] = np.mean(results_mat_recall[count_th,:,:-1],axis=1)
+    results_mat_precision[count_th,:,-1] = np.mean(results_mat_precision[count_th,:,:-1],axis=1)
+    results_mat_time[count_th,:,-1] = np.mean(results_mat_time[count_th,:,:-1],axis=1)
+
 results = {}
 results['precision'] = results_mat_precision
 results['recall'] = results_mat_recall
